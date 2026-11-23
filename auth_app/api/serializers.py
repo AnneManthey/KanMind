@@ -1,5 +1,6 @@
 """Serializers for registration and login."""
 
+from django.contrib.auth import authenticate
 from rest_framework import serializers
 
 from auth_app.models import User
@@ -44,3 +45,29 @@ class RegistrationSerializer(serializers.ModelSerializer):
         """
         validated_data.pop("repeated_password")
         return User.objects.create_user(**validated_data)
+
+
+class LoginSerializer(serializers.Serializer):
+    """Check e-mail and password and provide the matching user."""
+
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        """Authenticate the user with the given credentials.
+
+        Args:
+            data: The already field-validated input data.
+
+        Returns:
+            The input data extended by the authenticated ``user``.
+
+        Raises:
+            serializers.ValidationError: If the credentials are wrong.
+        """
+        user = authenticate(email=data["email"], password=data["password"])
+        # One generic message, so nobody can find out which e-mails exist.
+        if user is None:
+            raise serializers.ValidationError("Invalid email or password.")
+        data["user"] = user
+        return data
