@@ -5,7 +5,8 @@ from .managers import UserManager
 
 
 class User(AbstractUser):
-    """Custom User Model for login with email and fullname"""
+    """Custom User Model for login with email and fullname."""
+    
     username = None
     first_name = None
     last_name = None
