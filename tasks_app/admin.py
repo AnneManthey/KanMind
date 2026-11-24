@@ -18,4 +18,3 @@ class CommentAdmin(admin.ModelAdmin):
     """Show comments with their task and author in the admin list."""
 
     list_display = ("id", "task", "author", "created_at")
-    # list_filter = ("author")
