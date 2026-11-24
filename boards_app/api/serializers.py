@@ -2,7 +2,9 @@
 
 from rest_framework import serializers
 
+from auth_app.api.serializers import UserSummarySerializer
 from boards_app.models import Board
+from tasks_app.api.serializers import BoardTaskSerializer
 from tasks_app.models import Task
 
 
@@ -45,3 +47,29 @@ class BoardSerializer(serializers.ModelSerializer):
     def get_tasks_high_prio_count(self, board):
         """Return the number of tasks with high priority."""
         return board.tasks.filter(priority=Task.Priority.HIGH).count()
+
+
+class BoardDetailSerializer(serializers.ModelSerializer):
+    """Show one board with its members and tasks (GET detail)."""
+
+    members = UserSummarySerializer(many=True, read_only=True)
+    tasks = BoardTaskSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Board
+        fields = ("id", "title", "owner_id", "members", "tasks")
+
+
+class BoardUpdateSerializer(serializers.ModelSerializer):
+    """Update title and members of a board (PATCH)."""
+
+    owner_data = UserSummarySerializer(source="owner", read_only=True)
+    members_data = UserSummarySerializer(
+        source="members", many=True, read_only=True
+    )
+
+    class Meta:
+        model = Board
+        fields = ("id", "title", "owner_data", "members", "members_data")
+        # members is input only; the response shows members_data instead.
+        extra_kwargs = {"members": {"write_only": True}}

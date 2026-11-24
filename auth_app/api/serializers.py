@@ -6,6 +6,14 @@ from rest_framework import serializers
 from auth_app.models import User
 
 
+class UserSummarySerializer(serializers.ModelSerializer):
+    """Show the public user data used inside boards and tasks."""
+
+    class Meta:
+        model = User
+        fields = ("id", "email", "fullname")
+
+
 class RegistrationSerializer(serializers.ModelSerializer):
     """Validate registration data and create a new user."""
 
