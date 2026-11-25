@@ -2,7 +2,7 @@
 
 from django.urls import path
 
-from .views import BoardDetailView, BoardListCreateView
+from .views import BoardDetailView, BoardListCreateView, EmailCheckView
 
 urlpatterns = [
     path('boards/', BoardListCreateView.as_view(), name='board-list'),
@@ -11,4 +11,5 @@ urlpatterns = [
         BoardDetailView.as_view(),
         name='board-detail',
     ),
+    path('email-check/', EmailCheckView.as_view(), name='email-check'),
 ]

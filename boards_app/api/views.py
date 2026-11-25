@@ -1,9 +1,14 @@
 """Views for boards."""
 
 from django.db.models import Q
+from django.shortcuts import get_object_or_404
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
+from auth_app.api.serializers import UserSummarySerializer
+from auth_app.models import User
 from boards_app.models import Board
 
 from .permissions import IsBoardOwner, IsBoardOwnerOrMember
@@ -11,6 +16,7 @@ from .serializers import (
     BoardDetailSerializer,
     BoardSerializer,
     BoardUpdateSerializer,
+    EmailCheckSerializer,
 )
 
 
@@ -52,3 +58,19 @@ class BoardDetailView(generics.RetrieveUpdateDestroyAPIView):
         if self.request.method == "DELETE":
             return [IsAuthenticated(), IsBoardOwner()]
         return [IsAuthenticated(), IsBoardOwnerOrMember()]
+
+
+class EmailCheckView(APIView):
+    """Return the user registered with the given email address."""
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        """Validate the email parameter and look up the matching user."""
+        params = EmailCheckSerializer(data=request.query_params)
+        params.is_valid(raise_exception=True)
+        # iexact: Max@Example.com finds max@example.com.
+        user = get_object_or_404(
+            User, email__iexact=params.validated_data["email"]
+        )
+        return Response(UserSummarySerializer(user).data)

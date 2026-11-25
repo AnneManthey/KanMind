@@ -73,3 +73,9 @@ class BoardUpdateSerializer(serializers.ModelSerializer):
         fields = ("id", "title", "owner_data", "members", "members_data")
         # members is input only; the response shows members_data instead.
         extra_kwargs = {"members": {"write_only": True}}
+
+
+class EmailCheckSerializer(serializers.Serializer):
+    """Validate the email query parameter of the email check."""
+
+    email = serializers.EmailField()
