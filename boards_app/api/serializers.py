@@ -33,7 +33,7 @@ class BoardSerializer(serializers.ModelSerializer):
 
     def get_member_count(self, board):
         """Return the number of members listed on the board."""
-        # The owner is only counted if listed in members (per academy).
+        # The owner is only counted if listed in members.
         return board.members.count()
 
     def get_ticket_count(self, board):

@@ -44,7 +44,6 @@ class BoardDetailView(generics.RetrieveUpdateDestroyAPIView):
     # All boards, so the permission can answer 403 (not 404) for strangers.
     queryset = Board.objects.all()
     lookup_url_kwarg = "board_id"
-    # No PUT: the docs only describe GET, PATCH and DELETE.
     http_method_names = ["get", "patch", "delete", "head", "options"]
 
     def get_serializer_class(self):
