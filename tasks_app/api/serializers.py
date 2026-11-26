@@ -4,6 +4,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from auth_app.api.serializers import UserSummarySerializer
+from boards_app.api.permissions import is_board_member
 from tasks_app.models import Task
 
 User = get_user_model()
@@ -76,6 +77,27 @@ class TaskSerializer(serializers.ModelSerializer):
     def get_comments_count(self, task):
         """Return the number of comments on the task."""
         return task.comments.count()
+
+    def validate(self, attrs):
+        """Ensure assignee and reviewer are members of the task's board.
+
+        Args:
+            attrs: The field values that passed the field validation.
+
+        Returns:
+            The unchanged attrs if all users belong to the board.
+
+        Raises:
+            ValidationError: If assignee or reviewer is not a member.
+        """
+        board = attrs.get("board", getattr(self.instance, "board", None))
+        for field in ("assignee", "reviewer"):
+            user = attrs.get(field)
+            if user is not None and not is_board_member(user, board):
+                raise serializers.ValidationError(
+                    {f"{field}_id": "User must be a member of the board."}
+                )
+        return attrs
 
 
 class TaskUpdateSerializer(TaskSerializer):
