@@ -146,6 +146,12 @@ MAILERS = {
 }
 
 
+# Origins of the course frontend when started with VS Code Live Server.
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:5500",
+    "http://localhost:5500",
+]
+
 # Django REST framework
 # https://www.django-rest-framework.org/api-guide/settings/
 
