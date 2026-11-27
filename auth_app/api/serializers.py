@@ -24,6 +24,22 @@ class RegistrationSerializer(serializers.ModelSerializer):
         fields = ("fullname", "email", "password", "repeated_password")
         extra_kwargs = {"password": {"write_only": True}}
 
+    def validate_email(self, value):
+        """Reject an e-mail that exists in any spelling.
+
+        Args:
+            value: The e-mail that passed the field validation.
+
+        Returns:
+            The unchanged e-mail.
+
+        Raises:
+            serializers.ValidationError: If the e-mail is already taken.
+        """
+        if User.objects.filter(email__iexact=value).exists():
+            raise serializers.ValidationError("Email is already registered.")
+        return value
+
     def validate(self, data):
         """Check that both passwords are identical.
 
