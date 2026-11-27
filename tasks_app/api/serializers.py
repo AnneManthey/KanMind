@@ -143,7 +143,6 @@ class CommentSerializer(serializers.ModelSerializer):
 
     author = serializers.CharField(source="author.fullname", read_only=True)
 
-    # Match the API docs: UTC without microseconds.
     created_at = serializers.DateTimeField(
         format="%Y-%m-%dT%H:%M:%SZ", read_only=True
     )

@@ -28,12 +28,10 @@ class BoardSerializer(serializers.ModelSerializer):
             "owner_id",
             "members",
         )
-        # members is input only; the response shows member_count instead.
         extra_kwargs = {"members": {"write_only": True}}
 
     def get_member_count(self, board):
         """Return the number of members listed on the board."""
-        # The owner is only counted if listed in members.
         return board.members.count()
 
     def get_ticket_count(self, board):
@@ -71,7 +69,6 @@ class BoardUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Board
         fields = ("id", "title", "owner_data", "members", "members_data")
-        # members is input only; the response shows members_data instead.
         extra_kwargs = {"members": {"write_only": True}}
 
 

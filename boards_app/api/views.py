@@ -41,7 +41,6 @@ class BoardListCreateView(generics.ListCreateAPIView):
 class BoardDetailView(generics.RetrieveUpdateDestroyAPIView):
     """Show, update or delete a single board."""
 
-    # All boards, so the permission can answer 403 (not 404) for strangers.
     queryset = Board.objects.all()
     lookup_url_kwarg = "board_id"
     http_method_names = ["get", "patch", "delete", "head", "options"]

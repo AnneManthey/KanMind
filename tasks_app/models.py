@@ -22,7 +22,6 @@ class Task(models.Model):
         MEDIUM = "medium", "Medium"
         HIGH = "high", "High"
 
-    # String reference avoids a circular import with boards_app.
     board = models.ForeignKey(
         "boards_app.Board",
         on_delete=models.CASCADE,
@@ -54,7 +53,6 @@ class Task(models.Model):
         blank=True,
         related_name="reviewing_tasks",
     )
-    # Not part of any API response; only needed for the delete permission.
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
@@ -93,7 +91,6 @@ class Comment(models.Model):
     class Meta:
         verbose_name = "comment"
         verbose_name_plural = "comments"
-        # Docs: comments are returned in chronological order.
         ordering = ["created_at"]
 
     def __str__(self):

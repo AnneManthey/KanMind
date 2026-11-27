@@ -31,7 +31,6 @@ class RegistrationView(APIView):
     """Register a new user and return an auth token."""
 
     permission_classes = [AllowAny]
-    # Ignore any token header, so an old token cannot block this open endpoint.
     authentication_classes = []
 
     def post(self, request):
@@ -56,7 +55,6 @@ class LoginView(APIView):
     """Log a user in and return an auth token."""
 
     permission_classes = [AllowAny]
-    # Ignore any token header, so an old token cannot block this open endpoint.
     authentication_classes = []
 
     def post(self, request):
