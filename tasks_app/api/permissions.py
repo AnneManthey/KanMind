@@ -20,3 +20,11 @@ class IsTaskCreatorOrBoardOwner(BasePermission):
         """Return True if the user created the task or owns its board."""
         user = request.user
         return obj.created_by == user or obj.board.owner == user
+
+
+class IsCommentAuthor(BasePermission):
+    """Allow access only to the author of the comment."""
+
+    def has_object_permission(self, request, view, obj):
+        """Return True if the user wrote the comment."""
+        return obj.author == request.user
