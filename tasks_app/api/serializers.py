@@ -5,7 +5,7 @@ from rest_framework import serializers
 
 from auth_app.api.serializers import UserSummarySerializer
 from boards_app.api.permissions import is_board_member
-from tasks_app.models import Task
+from tasks_app.models import Comment, Task
 
 User = get_user_model()
 
@@ -136,3 +136,13 @@ class TaskUpdateSerializer(TaskSerializer):
                 {"board": "Changing the board is not allowed."}
             )
         return super().validate(attrs)
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    """Create comments and show them for a task."""
+
+    author = serializers.CharField(source="author.fullname", read_only=True)
+
+    class Meta:
+        model = Comment
+        fields = ("id", "created_at", "author", "content")
