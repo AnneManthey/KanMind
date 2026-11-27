@@ -29,7 +29,9 @@ class TaskCreateView(generics.CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         """Check board access before the usual create flow."""
-        self.check_board_access(request.data.get("board"))
+        # A list body has no .get(); the serializer then answers with 400.
+        if isinstance(request.data, dict):
+            self.check_board_access(request.data.get("board"))
         return super().create(request, *args, **kwargs)
 
     def check_board_access(self, board_id):
